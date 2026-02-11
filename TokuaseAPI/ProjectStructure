@@ -1,0 +1,49 @@
+com.tokubase
+│
+├── TokubaseApplication.java
+│
+├── config/
+│
+├── controller/
+│   ├── SeriesController.java
+│   ├── CharacterController.java
+│   └── FormController.java
+│
+├── service/
+│   ├── SeriesService.java
+│   ├── CharacterService.java
+│   └── FormService.java
+│
+├── repository/
+│   ├── SeriesRepository.java
+│   ├── CharacterRepository.java
+│   └── FormRepository.java
+│
+├── model/
+│   ├── Series.java
+│   ├── Character.java
+│   ├── Form.java
+│   └── Episode.java
+│
+├── dto/
+│   ├── series/
+│   │   ├── SeriesResponseDTO.java
+│   │   ├── SeriesDetailDTO.java
+│   │   └── CreateSeriesRequest.java
+│   │
+│   ├── character/
+│   │   ├── CharacterResponseDTO.java
+│   │   └── CreateCharacterRequest.java
+│   │
+│   └── form/
+│       ├── FormResponseDTO.java
+│       └── CreateFormRequest.java
+│
+├── mapper/
+│   ├── SeriesMapper.java
+│   ├── CharacterMapper.java
+│   └── FormMapper.java
+│
+└── exception/
+    ├── ResourceNotFoundException.java
+    └── GlobalExceptionHandler.java

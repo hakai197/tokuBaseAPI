@@ -1,4 +1,6 @@
-package com.tokubase.dto;
+package com.tokubase.dto.character;
+
+import com.tokubase.dto.series.SeriesDetailDTO;
 
 import java.util.List;
 
