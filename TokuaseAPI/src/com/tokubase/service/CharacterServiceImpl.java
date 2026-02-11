@@ -11,6 +11,8 @@ import com.tokubase.repository.SeriesRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class CharacterServiceImpl implements CharacterService {
@@ -31,5 +33,20 @@ public class CharacterServiceImpl implements CharacterService {
         Character saved = characterRepository.save(character);
 
         return CharacterMapper.toDTO(saved);
+    }
+
+    @Override
+    public CharacterResponseDTO getCharacterById(Long id) {
+        return null;
+    }
+
+    @Override
+    public List<CharacterResponseDTO> getCharactersBySeries(Long seriesId) {
+        return List.of();
+    }
+
+    @Override
+    public void deleteCharacter(Long id) {
+
     }
 }
