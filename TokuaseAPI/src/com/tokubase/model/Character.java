@@ -31,4 +31,8 @@ public class Character {
 
     @OneToMany(mappedBy = "character", cascade = CascadeType.ALL)
     private List<Form> forms;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private CharacterRole role;
 }
