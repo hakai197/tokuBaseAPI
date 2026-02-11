@@ -5,54 +5,30 @@ CREATE TABLE series (
                         year_start INT NOT NULL,
                         year_end INT,
                         description TEXT,
-    -- Series image fields
-                        logo_base64 LONGTEXT,
-                        poster_base64 LONGTEXT,
-                        banner_base64 LONGTEXT,
-                        series_image_base64 LONGTEXT,
-                        thumbnail_base64 LONGTEXT,
-                        series_image_url VARCHAR(500),
                         UNIQUE(name)
 );
-
 CREATE TABLE character (
                            id BIGINT PRIMARY KEY AUTO_INCREMENT,
                            name VARCHAR(255) NOT NULL,
                            series_id BIGINT NOT NULL,
                            role ENUM('MAIN', 'SECONDARY', 'EXTRA') NOT NULL,
                            color VARCHAR(50),
-    -- Character image fields
-                           character_image_base64 LONGTEXT,
-                           portrait_base64 LONGTEXT,
-                           thumbnail_base64 LONGTEXT,
-                           character_image_url VARCHAR(500),
-                           FOREIGN KEY (series_id) REFERENCES series(id) ON DELETE CASCADE
+                           FOREIGN KEY (series_id) REFERENCES series(id)
 );
-
 CREATE TABLE form (
                       id BIGINT PRIMARY KEY AUTO_INCREMENT,
                       character_id BIGINT NOT NULL,
                       name VARCHAR(255) NOT NULL,
                       power_type VARCHAR(100),
                       is_final_form BOOLEAN DEFAULT FALSE,
-    -- Form image fields
-                      form_image_base64 LONGTEXT,
-                      icon_base64 LONGTEXT,
-                      thumbnail_base64 LONGTEXT,
-                      form_image_url VARCHAR(500),
-                      FOREIGN KEY (character_id) REFERENCES character(id) ON DELETE CASCADE
+                      FOREIGN KEY (character_id) REFERENCES character(id)
 );
-
 CREATE TABLE episode (
                          id BIGINT PRIMARY KEY AUTO_INCREMENT,
                          series_id BIGINT NOT NULL,
                          episode_number INT NOT NULL,
                          title VARCHAR(255) NOT NULL,
                          air_date DATE,
-    -- Episode image fields
-                         episode_image_base64 LONGTEXT,
-                         thumbnail_base64 LONGTEXT,
-                         episode_image_url VARCHAR(500),
-                         FOREIGN KEY (series_id) REFERENCES series(id) ON DELETE CASCADE,
+                         FOREIGN KEY (series_id) REFERENCES series(id),
                          UNIQUE(series_id, episode_number)
 );
