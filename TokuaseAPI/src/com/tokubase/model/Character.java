@@ -2,7 +2,6 @@ package com.tokubase.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.util.List;
 
 @Entity
@@ -33,4 +32,19 @@ public class Character {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private CharacterRole role;
+
+    // Character images
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
+    private String characterImageBase64;  // Main character image
+
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
+    private String portraitBase64;        // Portrait/headshot
+
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
+    private String thumbnailBase64;       // ADD THIS - Thumbnail image
+
+    private String characterImageUrl;     // For cloud storage URLs
 }

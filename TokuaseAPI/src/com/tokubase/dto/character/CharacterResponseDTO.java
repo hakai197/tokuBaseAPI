@@ -13,4 +13,10 @@ public class CharacterResponseDTO {
     private CharacterRole role;
     private String color;
     private Long seriesId;
+
+    // Image fields
+    private String characterImageBase64;
+    private String portraitBase64;
+    private String characterImageUrl;
+    private String thumbnailBase64;
 }

@@ -12,4 +12,10 @@ public class FormResponseDTO {
     private Boolean isFinalForm;
     private Long characterId;
     private String characterName;
+
+    // Image fields
+    private String formImageBase64;
+    private String iconBase64;
+    private String formImageUrl;
+    private String thumbnailBase64;
 }

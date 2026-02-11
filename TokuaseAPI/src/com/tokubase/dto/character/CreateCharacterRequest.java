@@ -20,4 +20,10 @@ public class CreateCharacterRequest {
 
     @NotNull
     private Long seriesId;
+
+    // Image fields (optional)
+    private String characterImageBase64;  // Base64 encoded image
+    private String portraitBase64;        // Base64 encoded portrait
+    private String characterImageUrl;     // URL for cloud storage
+    private String thumbnailBase64;       // Base64 encoded thumbnail
 }

@@ -24,4 +24,12 @@ public class CreateSeriesRequest {
     private Integer yearEnd;
 
     private String description;
+
+    // Image fields (optional)
+    private String logoBase64;            // Base64 encoded logo
+    private String posterBase64;          // Base64 encoded poster
+    private String bannerBase64;          // Base64 encoded banner
+    private String seriesImageBase64;     // Base64 encoded main image
+    private String thumbnailBase64;       // Base64 encoded thumbnail
+    private String seriesImageUrl;        // URL for cloud storage
 }

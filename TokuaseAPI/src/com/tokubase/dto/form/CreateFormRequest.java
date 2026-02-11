@@ -18,4 +18,10 @@ public class CreateFormRequest {
 
     @NotNull(message = "Character ID is required")
     private Long characterId;
+
+    // Image fields (optional)
+    private String formImageBase64;       // Base64 encoded form image
+    private String iconBase64;            // Base64 encoded icon
+    private String formImageUrl;          // URL for cloud storage
+    private String thumbnailBase64;       // Base64 encoded thumbnail
 }

@@ -14,4 +14,12 @@ public class SeriesResponseDTO {
     private Integer yearStart;
     private Integer yearEnd;
     private String description;
+
+    // Image fields
+    private String logoBase64;
+    private String posterBase64;
+    private String bannerBase64;
+    private String seriesImageBase64;
+    private String thumbnailBase64;
+    private String seriesImageUrl;
 }

@@ -1,11 +1,7 @@
 package com.tokubase.model;
 
-
-
 import jakarta.persistence.*;
 import lombok.*;
-
-
 import java.util.List;
 
 @Entity
@@ -38,4 +34,27 @@ public class Series {
 
     @OneToMany(mappedBy = "series", cascade = CascadeType.ALL)
     private List<Character> characters;
+
+    // Series images
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
+    private String logoBase64;           // Series logo
+
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
+    private String posterBase64;         // Series poster/cover art
+
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
+    private String bannerBase64;         // Banner image for headers
+
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
+    private String seriesImageBase64;    // ADD THIS - Main series image
+
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
+    private String thumbnailBase64;      // ADD THIS - Thumbnail image
+
+    private String seriesImageUrl;       // For cloud storage URLs
 }
