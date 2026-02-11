@@ -21,8 +21,6 @@ public class Character {
     @Column(nullable = false)
     private String name;
 
-    private String role; // MAIN, SECONDARY
-
     private String color;
 
     @ManyToOne
