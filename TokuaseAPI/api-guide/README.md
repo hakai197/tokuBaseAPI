@@ -7,6 +7,7 @@ This React app is an interactive companion for your Spring backend. It helps dev
 - Editable path/query/body inputs
 - Live request execution and response preview
 - Copyable curl command generation
+- One-click database bootstrap from wiki admin sync endpoints
 
 ## Run locally
 
@@ -33,5 +34,7 @@ npm run preview
 ## Notes
 
 - Swagger shortcuts in the hero section link to `/swagger-ui.html` and `/api-docs` for the current base URL.
-- Admin wiki sync routes are included so users can trigger imports from the same interface.
+- Database Bootstrap in the hero section can populate data by calling:
+	- `POST /api/admin/wiki/sync/all`
+	- `POST /api/admin/wiki/sync/characters/{seriesId}` for each discovered series
 - If requests fail, verify the backend is running and reachable from the browser.

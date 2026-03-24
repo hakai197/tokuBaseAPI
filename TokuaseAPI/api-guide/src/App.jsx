@@ -13,6 +13,9 @@ function App() {
   const [statusCode, setStatusCode] = useState('Idle')
   const [responseText, setResponseText] = useState('Run a request to see response output.')
   const [requestUrl, setRequestUrl] = useState('')
+  const [seedLoading, setSeedLoading] = useState(false)
+  const [seedStatus, setSeedStatus] = useState('Not started')
+  const [seedLog, setSeedLog] = useState([])
 
   const tags = useMemo(
     () => ['All', ...new Set(API_ENDPOINTS.map((item) => item.tag))],
@@ -94,6 +97,101 @@ function App() {
     return lines.join(' \\\n')
   }, [selectedEndpoint, requestUrl, bodyText])
 
+  const appendSeedLog = (message) => {
+    setSeedLog((prev) => [...prev, message])
+  }
+
+  const parseJsonSafely = (text) => {
+    if (!text) return null
+    try {
+      return JSON.parse(text)
+    } catch {
+      return null
+    }
+  }
+
+  const fetchJson = async (url, options) => {
+    const response = await fetch(url, options)
+    const raw = await response.text()
+    const payload = parseJsonSafely(raw)
+    return { response, raw, payload }
+  }
+
+  const getSeriesArray = (payload) => {
+    if (Array.isArray(payload)) return payload
+    if (Array.isArray(payload?.content)) return payload.content
+    if (Array.isArray(payload?.items)) return payload.items
+    return []
+  }
+
+  const populateDatabase = async () => {
+    const normalized = baseUrl.replace(/\/$/, '')
+    const syncAllUrl = `${normalized}/api/admin/wiki/sync/all`
+    const listSeriesUrl = `${normalized}/api/series`
+
+    setSeedLoading(true)
+    setSeedStatus('Running wiki sync...')
+    setSeedLog([])
+
+    try {
+      appendSeedLog(`POST ${syncAllUrl}`)
+      const syncAllResult = await fetchJson(syncAllUrl, { method: 'POST' })
+      if (!syncAllResult.response.ok) {
+        throw new Error(
+          `Failed to sync series (${syncAllResult.response.status} ${syncAllResult.response.statusText}). ${syncAllResult.raw || ''}`,
+        )
+      }
+
+      appendSeedLog('Series import completed. Loading series IDs...')
+      const seriesResult = await fetchJson(listSeriesUrl, { method: 'GET' })
+      if (!seriesResult.response.ok) {
+        throw new Error(
+          `Series list failed (${seriesResult.response.status} ${seriesResult.response.statusText}). ${seriesResult.raw || ''}`,
+        )
+      }
+
+      const series = getSeriesArray(seriesResult.payload)
+      const ids = series
+        .map((item) => item?.id)
+        .filter((value) => value !== null && value !== undefined)
+
+      if (ids.length === 0) {
+        setSeedStatus('Series imported, but no series IDs returned for character sync.')
+        appendSeedLog('No series IDs found. Character sync skipped.')
+        return
+      }
+
+      appendSeedLog(`Found ${ids.length} series. Syncing characters per series...`)
+      let successCount = 0
+      let failedCount = 0
+
+      for (const id of ids) {
+        const characterSyncUrl = `${normalized}/api/admin/wiki/sync/characters/${id}`
+        appendSeedLog(`POST ${characterSyncUrl}`)
+
+        const characterResult = await fetchJson(characterSyncUrl, { method: 'POST' })
+        if (characterResult.response.ok) {
+          successCount += 1
+        } else {
+          failedCount += 1
+          appendSeedLog(
+            `Character sync failed for series ${id}: ${characterResult.response.status} ${characterResult.response.statusText}`,
+          )
+        }
+      }
+
+      const summary = `Completed: ${successCount} series character syncs succeeded, ${failedCount} failed.`
+      setSeedStatus(summary)
+      appendSeedLog(summary)
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown error'
+      setSeedStatus(`Database population failed: ${message}`)
+      appendSeedLog(`Error: ${message}`)
+    } finally {
+      setSeedLoading(false)
+    }
+  }
+
   const runRequest = async () => {
     setLoading(true)
     setStatusCode('Running')
@@ -146,9 +244,16 @@ function App() {
         <p className="eyebrow">TokuBase API Companion</p>
         <h1>Learn every backend endpoint with live requests</h1>
         <p className="hero-copy">
-          This frontend mirrors your Spring controllers and gives practical examples
-          for each route. Edit params, fire requests, and inspect response payloads.
+          This frontend is an interactive API workbook for your TokuBase backend.
+          It documents each route, provides editable request templates, and lets you
+          run calls against your own server to validate behavior before wiring a full
+          app or mobile client.
         </p>
+        <ul className="hero-list">
+          <li>Explore series, characters, episodes, forms, search, and admin endpoints.</li>
+          <li>Test path/query/body combinations and inspect raw responses.</li>
+          <li>Copy exact curl commands for scripts, Postman, or CI checks.</li>
+        </ul>
 
         <div className="hero-actions">
           <label>
@@ -168,6 +273,24 @@ function App() {
               Open OpenAPI JSON
             </a>
           </div>
+
+          <section className="seed-box" aria-live="polite">
+            <h2>Database Bootstrap</h2>
+            <p>
+              Use this to insert all available wiki data into your database from this UI.
+              It runs the admin sync-all endpoint, then syncs characters for each discovered
+              series.
+            </p>
+            <div className="button-row">
+              <button className="primary" onClick={populateDatabase} disabled={seedLoading}>
+                {seedLoading ? 'Populating...' : 'Insert Wiki Data Into Database'}
+              </button>
+            </div>
+            <p className="seed-status">Status: {seedStatus}</p>
+            {seedLog.length > 0 && (
+              <pre className="seed-log">{seedLog.join('\n')}</pre>
+            )}
+          </section>
         </div>
       </header>
 

@@ -42,10 +42,47 @@
   color: var(--ink-muted);
 }
 
+.hero-list {
+  margin: 0.85rem 0 0;
+  padding-left: 1.15rem;
+  color: var(--ink-muted);
+  display: grid;
+  gap: 0.3rem;
+}
+
 .hero-actions {
   margin-top: 1rem;
   display: grid;
   gap: 0.8rem;
+}
+
+.seed-box {
+  border: 1px solid var(--line-soft);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.78);
+  padding: 0.8rem;
+  display: grid;
+  gap: 0.58rem;
+}
+
+.seed-box h2 {
+  font-size: 1rem;
+}
+
+.seed-box p {
+  color: var(--ink-muted);
+  font-size: 0.9rem;
+}
+
+.seed-status {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+}
+
+.seed-log {
+  min-height: 120px;
+  max-height: 240px;
+  margin-top: 0.2rem;
 }
 
 .link-row {
