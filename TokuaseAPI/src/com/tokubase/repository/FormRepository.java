@@ -1,17 +1,21 @@
 package com.tokubase.repository;
 
-import com.tokubase.model.Character;
 import com.tokubase.model.Form;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.Collection;
 import java.util.List;
 
+@Repository
 public interface FormRepository extends JpaRepository<Form, Long> {
+
     List<Form> findByCharacterId(Long characterId);
-    boolean existByNameAndCharacterId( String name, Long characterId);
 
-    Collection<Object> findByCharacter(Character character);
+    /** All final forms for a character. */
+    List<Form> findByCharacterIdAndIsFinalFormTrue(Long characterId);
 
-    Collection<Object> findByCharacterAndIsFinalFormTrue(Character character);
+    /** All final forms across all characters. */
+    List<Form> findByIsFinalFormTrue();
+
+    boolean existsByNameAndCharacterId(String name, Long characterId);
 }

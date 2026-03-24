@@ -2,10 +2,18 @@ package com.tokubase.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "series")
+@Table(
+    name = "series",
+    uniqueConstraints = @UniqueConstraint(name = "uq_series_name", columnNames = "name"),
+    indexes = {
+        @Index(name = "idx_series_type", columnList = "type"),
+        @Index(name = "idx_series_year", columnList = "year_start")
+    }
+)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -24,37 +32,35 @@ public class Series {
     @Column(nullable = false)
     private SeriesType type;
 
-    @Column(nullable = false)
+    @Column(name = "year_start", nullable = false)
     private Integer yearStart;
 
+    @Column(name = "year_end")
     private Integer yearEnd;
 
     @Column(length = 2000)
     private String description;
 
-    @OneToMany(mappedBy = "series", cascade = CascadeType.ALL)
-    private List<Character> characters;
+    @OneToMany(mappedBy = "series", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @ToString.Exclude
+    @Builder.Default
+    private List<Character> characters = new ArrayList<>();
 
-    // Series images
-    @Lob
-    @Column(columnDefinition = "LONGTEXT")
-    private String logoBase64;           // Series logo
+    @OneToMany(mappedBy = "series", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @ToString.Exclude
+    @Builder.Default
+    private List<Episode> episodes = new ArrayList<>();
 
-    @Lob
-    @Column(columnDefinition = "LONGTEXT")
-    private String posterBase64;         // Series poster/cover art
-
-    @Lob
-    @Column(columnDefinition = "LONGTEXT")
-    private String bannerBase64;         // Banner image for headers
-
-    @Lob
-    @Column(columnDefinition = "LONGTEXT")
-    private String seriesImageBase64;    // ADD THIS - Main series image
-
-    @Lob
-    @Column(columnDefinition = "LONGTEXT")
-    private String thumbnailBase64;      // ADD THIS - Thumbnail image
-
-    private String seriesImageUrl;       // For cloud storage URLs
+    @Lob @Column(name = "logo_base64", columnDefinition = "LONGTEXT")
+    private String logoBase64;
+    @Lob @Column(name = "poster_base64", columnDefinition = "LONGTEXT")
+    private String posterBase64;
+    @Lob @Column(name = "banner_base64", columnDefinition = "LONGTEXT")
+    private String bannerBase64;
+    @Lob @Column(name = "series_image_base64", columnDefinition = "LONGTEXT")
+    private String seriesImageBase64;
+    @Lob @Column(name = "thumbnail_base64", columnDefinition = "LONGTEXT")
+    private String thumbnailBase64;
+    @Column(name = "series_image_url", length = 500)
+    private String seriesImageUrl;
 }

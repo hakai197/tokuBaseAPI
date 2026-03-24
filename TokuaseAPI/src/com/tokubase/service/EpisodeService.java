@@ -1,9 +1,12 @@
 package com.tokubase.service;
 
 import com.tokubase.dto.episode.CreateEpisodeRequest;
-import com.tokubase.dto.episode.EpisodeResponseDTO;
 import com.tokubase.dto.episode.EpisodeDetailDTO;
+import com.tokubase.dto.episode.EpisodeResponseDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface EpisodeService {
@@ -23,4 +26,10 @@ public interface EpisodeService {
     void deleteEpisode(Long id);
 
     void deleteAllEpisodesBySeries(Long seriesId);
+
+    // ── Search ────────────────────────────────────────────────────────────
+
+    Page<EpisodeResponseDTO> searchEpisodes(Long seriesId, String title,
+                                             LocalDate fromDate, LocalDate toDate,
+                                             Pageable pageable);
 }

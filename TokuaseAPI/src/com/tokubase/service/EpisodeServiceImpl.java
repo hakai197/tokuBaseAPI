@@ -1,8 +1,8 @@
 package com.tokubase.service;
 
 import com.tokubase.dto.episode.CreateEpisodeRequest;
-import com.tokubase.dto.episode.EpisodeResponseDTO;
 import com.tokubase.dto.episode.EpisodeDetailDTO;
+import com.tokubase.dto.episode.EpisodeResponseDTO;
 import com.tokubase.exception.DuplicateResourceException;
 import com.tokubase.exception.ResourceNotFoundException;
 import com.tokubase.mapper.EpisodeMapper;
@@ -11,9 +11,12 @@ import com.tokubase.model.Series;
 import com.tokubase.repository.EpisodeRepository;
 import com.tokubase.repository.SeriesRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -122,5 +125,14 @@ public class EpisodeServiceImpl implements EpisodeService {
             throw new ResourceNotFoundException("Series not found with id: " + seriesId);
         }
         episodeRepository.deleteBySeriesId(seriesId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<EpisodeResponseDTO> searchEpisodes(Long seriesId, String title,
+                                                    LocalDate fromDate, LocalDate toDate,
+                                                    Pageable pageable) {
+        return episodeRepository.search(seriesId, title, fromDate, toDate, pageable)
+                .map(EpisodeMapper::toDTO);
     }
 }

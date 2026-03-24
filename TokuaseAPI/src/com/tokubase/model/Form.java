@@ -4,7 +4,13 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "forms")
+@Table(
+    name = "forms",
+    indexes = {
+        @Index(name = "idx_form_character",  columnList = "character_id"),
+        @Index(name = "idx_form_final_form", columnList = "is_final_form")
+    }
+)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -19,26 +25,23 @@ public class Form {
     @Column(nullable = false)
     private String name;
 
+    @Column(name = "power_type", length = 100)
     private String powerType;
 
+    @Column(name = "is_final_form")
     private Boolean isFinalForm = false;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "character_id", nullable = false)
+    @ToString.Exclude
     private Character character;
 
-    // Form images
-    @Lob
-    @Column(columnDefinition = "LONGTEXT")
-    private String formImageBase64;  // Main form image
-
-    @Lob
-    @Column(columnDefinition = "LONGTEXT")
-    private String iconBase64;       // Small icon/thumbnail
-
-    @Lob
-    @Column(columnDefinition = "LONGTEXT")
-    private String thumbnailBase64;  // ADD THIS - Thumbnail image
-
-    private String formImageUrl;     // For cloud storage URLs
+    @Lob @Column(name = "form_image_base64", columnDefinition = "LONGTEXT")
+    private String formImageBase64;
+    @Lob @Column(name = "icon_base64", columnDefinition = "LONGTEXT")
+    private String iconBase64;
+    @Lob @Column(name = "thumbnail_base64", columnDefinition = "LONGTEXT")
+    private String thumbnailBase64;
+    @Column(name = "form_image_url", length = 500)
+    private String formImageUrl;
 }

@@ -15,5 +15,7 @@ public interface FormService {
 
     List<FormResponseDTO> getFinalFormsByCharacter(Long characterId);
 
+    FormResponseDTO updateForm(Long id, CreateFormRequest request);
+
     void deleteForm(Long id);
 }
